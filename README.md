@@ -1,8 +1,8 @@
 # neoden4
 
-This repo is a fork of charlie-x's [repository](https://github.com/charlie-x/neoden4), which is a rewrite of dangerous prototypes tm220 ulp (modded by jamz and Xinort) to work for the Neoden 4 pick and place.
+This repo is a fork of charlie-x's [repository](https://github.com/charlie-x/neoden4), which is a rewrite of dangerous prototypes tm220 ulp (modded by jamz and Xinort).
 
-Modified ULP script to generate PnP files for Norsk Datataeknikk AS.
+This fork has a modified ULP script to generate PnP files for Norsk Datataeknikk AS.
 
 ## User guide
 
