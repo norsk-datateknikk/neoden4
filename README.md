@@ -17,7 +17,7 @@ There is added board offset XY to the CSV output page, so that during export you
 
 This effectively translates the 0,0 origin of eagle to a new origin that matches the origin of the PCB on the PNP, if your PCB starts at 0,0 in eagle then wherever the lower left corner of the PCB is in PNP XY phyiscal coordinates, this should be set as the offset XY. Remembering that if you are using the camera for visual inspection or fiducials both the nozzle and camera position need to be able to moved too physically by the PNP
 
-the PNP software won't work well with negative coordinates, so make sure your outputted CSV is all positive XY
+The PNP software won't work well with negative coordinates, so make sure your outputted CSV is all positive XY.
 
 ### On the machine
 - Import the generated csv to the machine.
@@ -30,23 +30,3 @@ the PNP software won't work well with negative coordinates, so make sure your ou
 - The pnp  will tries to find the second mark,it should fail again, say yes to find it. search for your second fiducial mark, then click save. (again if you get an out of bounds error, read the note above about where to place the eagle file).
 - The pnp software should now update all your components to the correct place
 - Then update the left bottom position XY to the newly updated first component XY position and recreate the panel by clicking the panel button. save it, test by single step, or using align.
-
-
-@notes
- generates a loadable csv, tested on machine
- 
- user stacks work correctly
- 
- special feeders are on again, you may need to use V4.1.3 B9 if stack doesn't load correctly
- 
- nearly all parameters are configurable now
- 
- From @HolliM
- - A fix so that fiducials are found even if the name or value starts with the letters "FID". It does however not distinguish between top/bottom side. The output always contains both types, but they are easy to delete in Neoden4 software.
- - Code to determine the width of the board plus calculating bottom coordinates, so that flipping the board on the Y axis to do bottom side will still have correct (and mirrored) coordinates.
- 
- 
- 
-@todo
- bug test
- fix % in reel names breaking the script ( possibly other places too ) 
