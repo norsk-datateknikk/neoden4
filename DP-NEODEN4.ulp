@@ -463,11 +463,12 @@ string pad_all ( string text, int size, string chr )
 }
 
 // Determine if its a viable part to PNP
-// NOPNP attribute for parts you don't want to include
-// DNM for do not place
-// if thru hole, skip
-// if a testpad or jumper, skip
-
+// Based on attributes and the existance of pads.
+//
+// Attributes:
+// - NOPNP attribute set to "NOPNP" for parts you don't want to include in PNP placement.
+// - DNM attribute set to "DNM" for components which to not to place at all BOM.
+// - NOBOM attribute set to "NOBOM" for components which to ingnore from the BOM.
 int skip_part ( UL_ELEMENT E )
 {
     // Do not mount attribute
@@ -481,7 +482,7 @@ int skip_part ( UL_ELEMENT E )
     { return 0; }
 
     // Specifically set no to PNP
-    if ( E.attribute["NOPNP"] == "DNM" )
+    if ( E.attribute["NOPNP"] == "NOPNP" )
     { return 0; }
 
     // Determine

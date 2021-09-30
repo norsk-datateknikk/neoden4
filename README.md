@@ -30,3 +30,11 @@ The PNP software won't work well with negative coordinates, so make sure your ou
 - The pnp  will tries to find the second mark,it should fail again, say yes to find it. search for your second fiducial mark, then click save. (again if you get an out of bounds error, read the note above about where to place the eagle file).
 - The pnp software should now update all your components to the correct place
 - Then update the left bottom position XY to the newly updated first component XY position and recreate the panel by clicking the panel button. save it, test by single step, or using align.
+
+## Ignored parts
+If there are parts on the board which for some reason are not to be placed by the machine, they can be specified by specific attributes.
+
+### Attributes:
+- NOPNP attribute set to "NOPNP" for parts you don't want to include in PNP placement. E.g. Throgh hole components requiring manual placement.
+- DNM attribute set to "DNM" for components which to not to place at all BOM. E.g. backub and configuration resistors.
+- NOBOM attribute set to "NOBOM" for components which to ingnore from the BOM. E.g. titleframe etc.
