@@ -462,7 +462,7 @@ string pad_all ( string text, int size, string chr )
     return ret;
 }
 
-// Determine if its a viable part to PNP
+// Determine if its a viable part to PNP (Whether to skip the part).
 // Based on attributes and the existance of pads.
 //
 // Attributes:
@@ -471,7 +471,7 @@ string pad_all ( string text, int size, string chr )
 // - NOBOM attribute set to "NOBOM" for components which to ingnore from the BOM.
 int skip_part ( UL_ELEMENT E )
 {
-    // Do not mount attribute
+    // Do not mount attribute.
     if ( E.attribute["DNM"] == "dnm" )
     { return 0; }
     if ( E.attribute["DNM"] == "DNM" )
@@ -481,11 +481,12 @@ int skip_part ( UL_ELEMENT E )
     if ( E.attribute["NOBOM"] == "NOBOM" )
     { return 0; }
 
-    // Specifically set no to PNP
+    // Specifically set no to PNP.
     if ( E.attribute["NOPNP"] == "NOPNP" )
     { return 0; }
 
     // Determine
+    /*
     E.package.contacts ( C ) {
 
         // Has pads?
@@ -493,12 +494,12 @@ int skip_part ( UL_ELEMENT E )
             return 0;
         }
 
-
-        // No smds?
+        No smds?
         if ( !C.smd ) {
             return 0;
         }
     }
+    */
 
     return 1;
 }

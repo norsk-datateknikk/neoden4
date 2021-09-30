@@ -7,7 +7,7 @@ This fork has a modified ULP script to generate PnP files for Norsk Datataeknikk
 ## User guide
 
 ### In Fusion360
-- run ulp from board, load or edit the stack, assign and output.
+- Run ulp from the board view, load or edit the stack, assign and output a CSV file.
 
 #### If the board has negative XY Coordinates
 
@@ -32,6 +32,8 @@ The PNP software won't work well with negative coordinates, so make sure your ou
 - Then update the left bottom position XY to the newly updated first component XY position and recreate the panel by clicking the panel button. save it, test by single step, or using align.
 
 ## Ignored parts
+Fiducials are exracted automatically, if the parts name or value contains "FID".
+
 If there are parts on the board which for some reason are not to be placed by the machine, they can be specified by specific attributes.
 
 ### Attributes:
