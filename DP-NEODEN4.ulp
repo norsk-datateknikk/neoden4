@@ -63,7 +63,7 @@ string Help1 = "<p><strong>Reel Name</strong> - Enter the Your Assigned name to 
                "<br><strong>Height</strong> - Enter the Height for the Reel. Valid values are 0.00 to 5.00."
                "<br><strong>Feeding Rate</strong> - Enter Feeding Rate. Valid values are 0 to 20."
                "<br><strong>Rotation Correction</strong> - If Parts' placement rotation is off, select rotation value to add. a <strong>180</strong> degree rotation rotates the reel's part by .</p>";
-string Help2 = "<p><strong>NullSpaceLabs.com's Standard Stack</strong> - This button loads the NullSpaceLabs.com' Standard Stack><BR><strong>Load User's Standard Stack</strong> - Load a predefined stack <strong>Save User's Standard Stack</strong> - Save a stack for loading later<BR>"
+string Help2 = "Standard Stack><BR><strong>Load User's Standard Stack</strong> - Load a predefined stack <strong>Save User's Standard Stack</strong> - Save a stack for loading later<BR>"
                "<br><strong>Accept</strong> - Accept the displayed values. <strong>Cancel</strong> - Reject the changed values. "
                "<br>If there are reel assignments under the tabs<strong> PCB Top</strong> and<strong> PCB Bottom</strong>, it will be updated, as well as the values  in <strong>Height</strong> and <strong>Rate</strong>.</p>"
                "<p>Reels with 0,0 Pick XY, blank eel Name (or a single space) will not be exported";
@@ -1856,6 +1856,7 @@ void ReelPage ( int reeloffset )
                         dlgLabel ( " " );
                         dlgStretch ( 1 );
                     }
+                    /*
                     dlgCell ( 1, celly++ )
                     {
 
@@ -1867,6 +1868,7 @@ void ReelPage ( int reeloffset )
                         }
                         dlgStretch ( 1 );
                     }
+                    */
                     dlgCell ( 1, celly++ )
                     {
                         dlgPushButton ( "Load User's Standard Stack" ) {
