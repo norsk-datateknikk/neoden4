@@ -4,19 +4,20 @@
 "Parts of the code from Xinort\n"
 "Modified with GUI enhancement by Jamz\n"
 "Neoden 4 charliex@nullspacelabs.com\n"
+"Modified with for Norsk Datateknikk usage by Erik Buer\n"
 "1.0j\n"
 // -----------------------
-int debug = 0;                   // set to one for debug: show variables 2 for more
+int debug = 0;                   // Set to one for debug: show variables 2 for more
 string VERSION = "1.0j";
 
 //------------------------------------Variables ---------------------------------------------------//
 
 // modify these two variables accordingly
 
-int LinesPerTab = 24;            // limit lines per tab. if lines are more than this make a new tab
-int MAXREEL = 98;                // 16 Reels for tm220a, 24 for tm240 (untested), 98 for Neoden4, 99 is considered unused
-int REELS_PER_PAGE = 14;        // reels shown per page
-int SPECIALREEL = 49;			// in the neoden4 49 and up are special reels.
+int LinesPerTab = 24;       // limit lines per tab. if lines are more than this make a new tab
+int MAXREEL = 98;           // 16 Reels for tm220a, 24 for tm240 (untested), 98 for Neoden4, 99 is considered unused
+int REELS_PER_PAGE = 14;    // reels shown per page
+int SPECIALREEL = 49;	    // in the neoden4 49 and up are special reels.
 
 int tabloop;
 int AddTab = 0;
@@ -38,18 +39,18 @@ int line = 1;
 
 int Selected = 0;
 
-// amount to offset the board by
+// Amount to offset the board by
 real board_offset_x = 0;
 real board_offset_y = 0;
 
-// override move speed
+// Override move speed
 int board_move_override = 100;
 
-// if you already know the rotation, note the neoden UI rounds the value, the csv has the floating point representation
+// If you already know the rotation, note the neoden UI rounds the value, the csv has the floating point representation
 real g_board_rotation = 0;
 
 
-int i, j, k, l, m, n = 0;       //general purpose iteration/index variable
+int i, j, k, l, m, n = 0;       // General purpose iteration/index variable
 // --------------------------------------------Display clickable Picture, linked to DP ------------------------------------------
 string Text = "<br><br><center><a href='http://dangerousprototypes.com/2013/02/21/workshop-video-56-tm220a-table-top-pick-and-place-overview/'>Dangerous Prototypes Original Post</A><BR>"
               "<br><center><a href='https://www.nullspacelabs.com'>NullSpaceLabs.com</A>"
@@ -173,9 +174,10 @@ string NSL_partList[] = {
     "stack,98,1,1,92.27,226.88,0.00,0805,couple pf -DNP,-1.00,0,0.00,0,No,-40,1,30,1,1,80.00,1.00,1,1,No,No,-40,-40,-40,-40,"
 };
 
-int  DP_stack_Loaded = 0;    // flag 1 if dp stack is loaded
+// Flag 1 if dp stack is loaded
+int  DP_stack_Loaded = 0;
 
-/// array for trays which are 49 and up
+/// Array for trays which are 49 and up
 //struct {
 int trayColumns[];
 int trayRows[];
@@ -186,7 +188,7 @@ int trayStartX[];
 int trayStartY[];
 //}
 
-// array for each individual parts as found in the pcb
+// Array for each individual parts as found in the pcb
 //struct {
 string Ename[];             // Parts name
 string Evalue[];            // Parts value
@@ -295,27 +297,27 @@ int g_TapeSkip_Mid[];
 int g_Erate_Mid[];
 // }
 
-real BoardX = 0.00;               // size of pcb board in x axis  (lower left)
-real BoardY = 0.00;              // size of pcb board in y axis  (lower left)
-int nBoardsinX = 0;              // no. of boards in x direction
-int nBoardsinY = 0;              // no. of Boards in Y direction
-real GapBoardX = 0.00;           // gap between boards
-real GapBoardY = 0.00;           // gap between boards
+real BoardX = 0.00;             // size of pcb board in x axis  (lower left)
+real BoardY = 0.00;             // size of pcb board in y axis  (lower left)
+int nBoardsinX = 0;             // no. of boards in x direction
+int nBoardsinY = 0;             // no. of Boards in Y direction
+real GapBoardX = 0.00;          // gap between boards
+real GapBoardY = 0.00;          // gap between boards
 
-string components_Top[];         //  concatenation of variables for top layer: g_name+value+package use in combobox
-string grp_components_Top[];     // group and format parts into c1-c10, instead of c1,c2,c3,c4c4 etc
-string component_quantity_Top[]; // version 1 update - break components_Top
+string components_Top[];        //  concatenation of variables for top layer: g_name+value+package use in combobox
+string grp_components_Top[];    // group and format parts into c1-c10, instead of c1,c2,c3,c4c4 etc
+string component_quantity_Top[];// version 1 update - break components_Top
 string component_value_Top[];
 string component_packagename_Top[];
 
-string components_Bottom[];      //  concatenation of variables for bottom: g_name+value+package use in combobox
-string grp_components_Bottom[];     // group and format parts into c1-c10, instead of c1,c2,c3,c4c4 etc
+string components_Bottom[];     //  concatenation of variables for bottom: g_name+value+package use in combobox
+string grp_components_Bottom[]; // group and format parts into c1-c10, instead of c1,c2,c3,c4c4 etc
 string component_quantity_Bottom[];
 string component_value_Bottom[];
 string component_packagename_Bottom[];
 
-string components_Mid[];     //  concatenation of variables for bottom: g_name+value+package use in combobox
-string grp_components_Mid[];     // group and format parts into c1-c10, instead of c1,c2,c3,c4c4 etc
+string components_Mid[];        //  concatenation of variables for bottom: g_name+value+package use in combobox
+string grp_components_Mid[];    // group and format parts into c1-c10, instead of c1,c2,c3,c4c4 etc
 string component_quantity_Mid[];
 string component_value_Mid[];
 string component_packagename_Mid[];
@@ -328,16 +330,16 @@ int components_Bottom_ptr[], components_Top_ptr[], components_Mid_ptr[]; //  wil
 int TopCounter = 0, BottomCounter = 0, MidCounter = 0; // Top components counter and Bottom component Counter, + in between layers
 int len;
 string dummy_grouping;
-string g_Ename_group[];    // storage for grouped partslist
+string g_Ename_group[];     // storage for grouped partslist
 string partslist[];
 string partsX;
 string partsY;
 string partsRotation;
 string layer;
-string Reel[];    // user defined names for reels
-string ReelNameAndFoot[];    // auto generated name for reel name and footprint
+string Reel[];              // user defined names for reels
+string ReelNameAndFoot[];   // auto generated name for reel name and footprint
 
-string ReelNum[];		// string version of reel index
+string ReelNum[];		    // string version of reel index
 
 
 // Feeder Basic Information
@@ -345,35 +347,35 @@ int ReelHead[];       // Nozzle index into NozzleCombo used for this reel 1,2,3,
 real ReelOffSetX[];
 real ReelOffSetY[];
 
-real ReelHeight[];     // pick height
+real ReelHeight[];          // pick height
 int ReelPickDelay[];        // pick delay
-real ReelPlaceHeight[];        // place height
-int ReelPlaceDelay[];        // place delay
-int  ReelMoveSpeed[];           // feeder move speed
-int  ReelVacuumDetection[];     // Vacuum detection, on/off
-int ReelVacuumValue[];         // -10 to -100
-real  ReelPickAngle[];           // feeder -180,-90,0,90,180
-int  ReelVisionAlignment[];     // No Action, Indivudally, Jointly, Large component
-int  ReelSkip[];                 // Skip, check on/off
-int  ReelSizeCorrect[];         // Size correct
-string ReelFootPrint[];           // Footprint of Feeder/reel
-int FeedExchange[];                 // Feeder Exchange Feeder 1 to 58
+real ReelPlaceHeight[];     // place height
+int ReelPlaceDelay[];       // place delay
+int  ReelMoveSpeed[];       // feeder move speed
+int  ReelVacuumDetection[]; // Vacuum detection, on/off
+int ReelVacuumValue[];      // -10 to -100
+real  ReelPickAngle[];      // feeder -180,-90,0,90,180
+int  ReelVisionAlignment[]; // No Action, Indivudally, Jointly, Large component
+int  ReelSkip[];            // Skip, check on/off
+int  ReelSizeCorrect[];     // Size correct
+string ReelFootPrint[];     // Footprint of Feeder/reel
+int FeedExchange[];         // Feeder Exchange Feeder 1 to 58
 // feed box information
-int ReelPeelStrength[];              // peel strength 80
-int ReelFeedStrength[];              // feed strength   10 to 100 in steps of 1
-int ReelRate[];              // size to move feeder for one component 2-32
+int ReelPeelStrength[];     // peel strength 80
+int ReelFeedStrength[];     // feed strength   10 to 100 in steps of 1
+int ReelRate[];             // size to move feeder for one component 2-32
 
 string RotationOffset[];    // 0,90,180,270 - adds angle
 
-string FeedRates[]; // 0 - 100, steps of 10
-int FeedRatesSelected[];   // 0-9
+string FeedRates[];         // 0 - 100, steps of 10
+int FeedRatesSelected[];    // 0-9
 
 string ComboThresholds[] = { "-10", "-15", "-20", "-25", "-30", "-35", "-40", "-45", "-50", "-55", "-60", "-65", "-70", "-75", "-80", "-85", "-90", "-95", "-100"};
 
-int Nozzle1Thresholds[] ; //-10 to -100 in steps of 5 (index to combobox)
-int Nozzle2Thresholds[]; //-10 to -100 in steps of 5
-int Nozzle3Thresholds[]; //-10 to -100 in steps of 5
-int Nozzle4Thresholds[]; //-10 to -100 in steps of 5
+int Nozzle1Thresholds[] ;   //-10 to -100 in steps of 5 (index to combobox)
+int Nozzle2Thresholds[];    //-10 to -100 in steps of 5
+int Nozzle3Thresholds[];    //-10 to -100 in steps of 5
+int Nozzle4Thresholds[];    //-10 to -100 in steps of 5
 
 int xmax = -2147483648;
 int xmin = 2147483647;
@@ -393,31 +395,31 @@ string nozzleCombo[] = { "-",
 //-------------------------------------------------------------------------------------------------------
 
 
-// converts from nozzle combo to a single nozzle
+// Converts from nozzle combo to a single nozzle
 int convert_to_nozzle ( int noz_id )
 {
     string newnoz = "";
 
-    // first entry is empty
+    // First entry is empty
     if ( noz_id == 0 ) { return 0; }
 
     newnoz = nozzleCombo[noz_id];
 
-    //terminate
+    // Terminate
     newnoz[1] = 0;
 
 
     return strtol ( newnoz );
 }
 
-//  convert num to string
+//  Convert num to string
 string Num2Str ( int i )
 {
     string str;
     sprintf ( str, "%d", i );
     return str;
 }
-//  convert real num to string
+//  Convert real num to string
 
 string Num2StrF ( real i )
 {
@@ -426,7 +428,7 @@ string Num2StrF ( real i )
     return str;
 }
 
-//trim leading and trailing spaces
+// Trim leading and trailing spaces
 
 string alltrim ( string s )
 {
@@ -459,7 +461,7 @@ string pad_all ( string text, int size, string chr )
     return ret;
 }
 
-// determine if its a viable part to PNP
+// Determine if its a viable part to PNP
 // NOPNP attribute for parts you don't want to include
 // DNP for do not place
 // if thru hole, skip
@@ -498,16 +500,16 @@ int skip_part ( UL_ELEMENT E )
     { return 0; }
 
 
-    // determine
+    // Determine
     E.package.contacts ( C ) {
 
-        // has pads?
+        // Has pads?
         if ( C.pad  ) {
             return 0;
         }
 
 
-        // no smds?
+        // No smds?
         if ( !C.smd ) {
             return 0;
         }
@@ -516,7 +518,7 @@ int skip_part ( UL_ELEMENT E )
     return 1;
 }
 
-// get X pos in mm of first part that will be output
+// Get X pos in mm of first part that will be output
 real get_first_x()
 {
     board ( B ) {
@@ -530,7 +532,7 @@ real get_first_x()
     return -1;
 }
 
-// get Y pos in mm of first part that will be output
+// Get Y pos in mm of first part that will be output
 real get_first_y()
 {
     board ( B ) {
@@ -544,36 +546,36 @@ real get_first_y()
     return -1;
 }
 
-// check to see if its a fiducial, maybe we should test something longer
+// Check to see if its a fiducial, maybe we should test something longer
 int is_fiducial ( UL_ELEMENT E )
 {
 
-    // does name contain FID
+    // Does name contain FID
     if ( strstr ( E.value, "FID" ) >= 0 ) {
         return 1;
     }
 
-    // does value contain FID
+    // Does value contain FID
     if ( strstr ( E.name, "FID" ) >= 0  ) {
         return 1;
     }
 
-    // we don't think its a fiducial
+    // We don't think its a fiducial
     return 0;
 }
 
 int round_and_clamp ( real value, real lower, real upper )
 {
-    //round it, the neoden will override anything that isn't in steps of 10 for some values
+    // Round it, the neoden will override anything that isn't in steps of 10 for some values
     value /= 10;
     value = round ( value ) * 10;
 
-    // clamp it, set a minimum value
+    // Clamp it, set a minimum value
     if ( value < lower ) {
         value = lower;
     }
 
-    // clamp it, set an upper
+    // Clamp it, set an upper
     if ( value > upper ) {
         value = upper;
     }
@@ -581,7 +583,7 @@ int round_and_clamp ( real value, real lower, real upper )
     return value;
 }
 
-// number of fiducials found
+// Number of fiducials found
 int g_fiducial_count = 0;
 
 // XY list of fiducials found, in eagle space
@@ -589,7 +591,7 @@ real g_fiducial_x[];
 real g_fiducial_y[];
 
 
-// return number of fiducials found and add them to a list
+// Return number of fiducials found and add them to a list
 int scan_for_fiducials()
 {
 
@@ -597,7 +599,7 @@ int scan_for_fiducials()
 
     board ( B ) {
         B.elements ( E ) {
-            // find a fiducial
+            // Find a fiducial
             if ( is_fiducial ( E ) == 1 ) {
 
                 // remember it
@@ -609,10 +611,10 @@ int scan_for_fiducials()
 
         }
     }
-    // store it for later
+    // Store it for later
     g_fiducial_count = fiducial_count;
 
-    // send back count
+    // Send back count
     return fiducial_count;
 }
 
@@ -620,7 +622,7 @@ int scan_for_fiducials()
 //"stack,2,0,1,409.87,101.73,90.00,0805,0805/2.2nF,0.50,0,0.50,0,No,-40,1,100,4,50,80,No,No,-40,-40,-40,-40,",
 //[REEL]|1|0805/2.2nF|0805|1|409.87|101.73|90.00|0805|0.50|0|0.50|0|NO|-40|1|100|4|50|80|NO|NO
 
-// writes out a neoden 4 style string for a REEL
+// Writes out a neoden 4 style string for a REEL
 void write_reel_line ( int j )
 {
     string str;
@@ -675,12 +677,12 @@ void write_reel_line ( int j )
     } else {
 
 ///////////////////////////////////////////////
-//special feeders have a different format.
+// Special feeders have a different format.
 
 //#Feeder, Feeder ID, Type, Nozzle,    X,      Y, Angle, Footprint, Value  , Pick height, Pick delay, Place Height, Place Delay, Vacuum Discard,  Threshold, Vision Alignment, Speed,
 //stack,   98,          1,    1 ,  92.27, 226.88, 0.00,     0805,   special,-1.00,            0,           0.00,         0,            No,            -40,       1,                50,
 
-//continued, differences are here
+// Continued, differences are here
 // columns, rows, right top x , right top y, startx, starty,   skip, size correct,  thresholds for nozzles 1-4
 // 9,        8,   162.27,      206.88,         3,       4,        No,      No,       -40,-40,-40,-40,
 
@@ -727,8 +729,8 @@ void write_reel_line ( int j )
 
 
 
-// parses a neoden 4 style string for a REEL
-// reel index stored in file is +1 of actual index.
+// Parses a neoden 4 style string for a REEL.
+// Reel index stored in file is +1 of actual index.
 void parse_reel_line ( string reelString )
 {
     int i;
@@ -743,7 +745,7 @@ void parse_reel_line ( string reelString )
 
     }
 
-    // get reel index, USS  starts at 1
+    // get reel index, USS  starts at 1.
     i = strtol ( alltrim ( a[1] ) );
 
     if ( i <= MAXREEL ) {
@@ -752,32 +754,32 @@ void parse_reel_line ( string reelString )
         // a[1] = feeder index
         // a[2] = type
 
-        // head = nozzle index to combo box
+        // head = nozzle index to combo box.
         ReelHead[i] = strtol ( alltrim ( a[3] ) );
 
-        // XY location of feeder
+        // XY location of feeder.
         ReelOffSetX[i] = strtod ( alltrim ( a[4] ) );
         ReelOffSetY[i] = strtod ( alltrim ( a[5] ) );
 
-        // Angle
+        // Angle.
         ReelPickAngle[i] = strtod ( alltrim ( a[6] ) );
 
-        // Footprint
+        // Footprint.
         ReelFootPrint[i] = ( alltrim ( a[7] ) );
 
-        // get rid of single space names
+        // Get rid of single space names.
         if ( strlen ( ReelFootPrint[i] ) == 1 & strstr ( ReelFootPrint[i], " " ) == 0  ) {
             ReelFootPrint[i] = "";
         }
 
-        // package and value is combined in the neoden stack
+        // Package and value is combined in the neoden stack.
         if ( strlen ( alltrim ( a[8] ) ) ) {
             // Value
             Reel[i] = alltrim ( a[8] );
 
         }
 
-        // get rid of single space names
+        // Get rid of single space names.
 
         if ( strlen ( Reel[i] ) == 1 & strstr ( Reel[i], " " ) == 0 ) {
             Reel[i] = "";
@@ -807,25 +809,25 @@ void parse_reel_line ( string reelString )
         ReelVacuumValue[i] = strtol ( alltrim ( a[14] ) );
 
 
-        // Vision Alignment
+        // Vision Alignment.
         ReelVisionAlignment[i] = strtol ( alltrim ( a[15] ) );
 
-        // Speed
+        // Speed.
         ReelMoveSpeed[i] = strtol ( alltrim ( a[16] ) );
 
         if ( i < SPECIALREEL ) {
-            // Feedbox Info
-            // Feeding Rate
+            // Feedbox Info.
+            // Feeding Rate.
             ReelRate[i] = strtol ( alltrim ( a[17] ) );
 
 
-            // Feed Strength
+            // Feed Strength.
             ReelFeedStrength[i] = strtol ( alltrim ( a[18] ) );
 
-            // Peel Strength
+            // Peel Strength.
             ReelPeelStrength[i] = strtol ( alltrim ( a[19] ) );
 
-            // Skip (Yes/No)
+            // Skip (Yes/No).
             if ( alltrim ( a[20] ) == "Yes" ) {
                 ReelSkip[i] = 1;
 
@@ -853,7 +855,7 @@ void parse_reel_line ( string reelString )
             trayColumns[i] = strtol ( alltrim ( a[17] ) );
             trayRows[i] = strtol ( alltrim ( a[18] ) );
 
-            // coords (real)
+            // coords (real).
             trayRightTopX[i] = strtod ( alltrim ( a[19] ) );
             trayRightTopY[i] = strtod ( alltrim ( a[20] ) );
 
@@ -861,7 +863,7 @@ void parse_reel_line ( string reelString )
             trayStartX[i] = strtol ( alltrim ( a[21] ) );
             trayStartY[i] = strtol ( alltrim ( a[22] ) );
 
-            // Skip (Yes/No)
+            // Skip (Yes/No).
             if ( alltrim ( a[23] ) == "Yes" ) {
                 ReelSkip[i] = 1;
 
@@ -869,7 +871,7 @@ void parse_reel_line ( string reelString )
                 ReelSkip[i] = 0;
             }
 
-            // Size Correct ( CheckMark Yes/No)
+            // Size Correct ( CheckMark Yes/No).
             if ( alltrim ( a[24] ) == "Yes" ) {
                 ReelSizeCorrect[i] = 1;
 
@@ -886,14 +888,14 @@ void parse_reel_line ( string reelString )
     }
 }
 
-// the defaults are stored in config.ini,under [Stack] they are stored as Variants, motorola format 0x87 is the type,  then the 4 digits are a 32 bit float, if only three , add \x00 at end to pad.
-// you pull it from a default csv if you switch on all the feeders in the feeder tab, or from the system setup page,smd configuration
-// positions of reels in neoden4 as defaults, used to seed new
+// The defaults are stored in config.ini,under [Stack] they are stored as Variants, motorola format 0x87 is the type,  then the 4 digits are a 32 bit float, if only three , add \x00 at end to pad.
+// You pull it from a default csv if you switch on all the feeders in the feeder tab, or from the system setup page,smd configuration
+// Positions of reels in neoden4 as defaults, used to seed new
 // also.. phew....
 
-// starts from reel 1
+// starts from reel 1.
 
-// x coordinates of feeders
+// x coordinates of feeders.
 //                         reel 1           2           3            4           5           6      7     8     9       10
 real default_reel_x[] = { 410.2232666, 409.8671875, 409.8482361, 409.9453125, 409.578125, 409.67, 409.52, 409.99, 410.02, 409.79,
 //                             11    12    13      14      15      16      17      18      19     20
@@ -941,7 +943,7 @@ real default_reel_y[] = { 88.27677155, 101.9296875, 115.0446625, 137.2856445, 14
                           217.52, 211.92, 227.05, 227.88, 227.57, 227.38, 227.09, 226.88
                         };
 
-// get the default feeder X address  for reel number 1-MAXREEL
+// Get the default feeder X address  for reel number 1-MAXREEL
 real default_feeder_x ( int index )
 {
     if ( index <= 0 ) { return 0; }
@@ -952,7 +954,7 @@ real default_feeder_x ( int index )
     return default_reel_x[index];
 }
 
-// get the default feeder X address  for reel number 1-MAXREEL
+// Get the default feeder X address  for reel number 1-MAXREEL
 real default_feeder_y ( int index )
 {
     if ( index <= 0 ) { return 0; }
@@ -963,10 +965,10 @@ real default_feeder_y ( int index )
     return default_reel_y[index];
 }
 
-//matching neoden4 defaults
+// Matching neoden4 defaults
 void set_defaults()
 {
-    // fill some defaults
+    // Fill some default values
     for ( int j = 0; j <= MAXREEL; j++ ) {
 
         Reel[j] = "";// "Reel " + Num2Str(j);
@@ -1013,7 +1015,7 @@ void set_defaults()
 
 void Load_Stack ( string who )
 {
-    string a[];    // use for spliting the line
+    string a[];    // Use for spliting the line
     int i;
     int j;
 
@@ -2123,7 +2125,7 @@ if ( project.board ) project.board ( B )
         SourceFname = s;
     }
 
-    StackFname = workdir + SourceFname + ".PnP"; // same filename with the board
+    StackFname = workdir + SourceFname + ".PnP"; // Same filename with the board
 
     //---- try to get all parts in the board loaded to memory
     //     Ename[j],Equantity[j],Evalue[j],Epackagename[j] etc
@@ -2177,11 +2179,11 @@ if ( project.board ) project.board ( B )
         Elayer[counter] = layer;
         Eangle[counter] = partsRotation;
         Eheadline[counter] = E.package.headline;
-        Eptr[counter] = counter; //  line numbers, when Eptr[0] ,value is 0
+        Eptr[counter] = counter; //  Line numbers, when Eptr[0] ,value is 0
         counter++;
     }
 
-    // then group contents according to values and package, must create a group
+    // Group contents according to values and package, must create a group
     // index holds all the unique elements after grouping.
     found = 0;
 
@@ -2192,16 +2194,16 @@ if ( project.board ) project.board ( B )
             g_Evalue[index] = alltrim ( Evalue[j] );
             g_Epackagename[index] = alltrim ( Epackagename[j] );
             g_ElibrarySource[index] = ElibrarySource[j];
-            g_EpartsX[index] = "";   // EpartsX[j];     //coordinates parts-do not use
+            g_EpartsX[index] = "";   // EpartsX[j];     // Coordinates parts-do not use
             g_EpartsY[index] = "";   // EpartsY[j];
             g_Elayer[index] = Elayer[j];
-            g_Efeeder[index] = 99;  // to be filled up- reel assignment
-            g_Head[index] = 1;   // valid values are 1,2,3,4 only
-            g_Equantity[index] = 1; // always 1
-            g_Erate[index] = 0;    // to be filled up
+            g_Efeeder[index] = 99;      // To be filled up- reel assignment
+            g_Head[index] = 1;          // Valid values are 1,2,3,4 only
+            g_Equantity[index] = 1;     // Always 1
+            g_Erate[index] = 0;         // To be filled up
             g_Eangle[index] = "";
-            g_Eheight[index] = 0.0;   // to be filled up
-            g_ptr[index] = index;      // each line must have a number
+            g_Eheight[index] = 0.0;     // To be filled up
+            g_ptr[index] = index;       // Each line must have a number
             g_class[index] = grouping;
             g_backptr[index] = alltrim ( Num2Str ( Eptr[j] ) );
             g_Eheadline[index] = Eheadline[j];
@@ -2209,39 +2211,39 @@ if ( project.board ) project.board ( B )
         }
 
         else {
-            // locate the part and group(package, value, layer)
-            found = 0; // not found yet
+            // Locate the part and group(package, value, layer)
+            found = 0; // Not found yet
 
             for ( i = 0; i < index; i++ ) {
                 if ( strupr ( alltrim ( Epackagename[j] ) ) == strupr ( g_Epackagename[i] ) ) {
                     if ( strupr ( alltrim ( Evalue[j] ) ) == strupr ( g_Evalue[i] ) )  {
-                        if ( Elayer[j] == g_Elayer[i] ) {   // group
+                        if ( Elayer[j] == g_Elayer[i] ) {   // Group
                             g_Equantity[i]++;
-                            g_Ename[i] += "," + alltrim ( Ename[j] ); // append so that parts name will be c1,c2,c3 etc
+                            g_Ename[i] += "," + alltrim ( Ename[j] ); // Append so that parts name will be c1,c2,c3 etc
 
                             g_class[i] = grouping;
-                            g_backptr[i] += "|" + alltrim ( Num2Str ( Eptr[j] ) ); // points back 5|12|13|16|22
-                            found = 1; // found one
+                            g_backptr[i] += "|" + alltrim ( Num2Str ( Eptr[j] ) ); // Points back 5|12|13|16|22
+                            found = 1; // Found one
                         }
                     }
                 }
             }
 
-            if ( found == 0 ) { // found nothing, create new entry, index was incremented before
+            if ( found == 0 ) { // Found nothing, create new entry, index was incremented before
                 g_Ename[index] = alltrim ( Ename[j] );
                 g_EnameTemp[index] = alltrim ( Ename[j] );
                 g_Evalue[index] = alltrim ( Evalue[j] );
                 g_Epackagename[index] = alltrim ( Epackagename[j] );
                 g_ElibrarySource[index] = ElibrarySource[j];
-                g_EpartsX[index] = "";    //EpartsX[j];     //coordinates parts-Do not use
+                g_EpartsX[index] = "";    //EpartsX[j];     // Coordinates parts-Do not use
                 g_EpartsY[index] = "";    //EpartsY[j];
                 g_Elayer[index] = Elayer[j];
-                g_Efeeder[index] = 99; // to be filled up- reel assignment
-                g_Head[index] = 1;     // initially assign head # 1
+                g_Efeeder[index] = 99;  // to be filled up- reel assignment
+                g_Head[index] = 1;      // initially assign head # 1
                 g_Equantity[index] = 1; // always 1
-                g_Erate[index] = 0;    // to be filled up
+                g_Erate[index] = 0;     // to be filled up
                 g_Eangle[index] = "";
-                g_Eheight[index] = 0.0;   // to be filled up
+                g_Eheight[index] = 0.0; // to be filled up
                 g_Eheadline[index] = Eheadline[j];
                 g_ptr[index] = index;
                 g_class[index] = grouping;
@@ -2259,8 +2261,8 @@ if ( project.board ) project.board ( B )
 
     int teststring;
 
-
-    for ( j = 0; j < index; j++ ) { //load for display
+    // Load for display
+    for ( j = 0; j < index; j++ ) {
         string equant = Num2Str ( g_Equantity[j] );
         string gptr = Num2Str ( g_ptr[j] );
 
@@ -2276,7 +2278,7 @@ if ( project.board ) project.board ( B )
         partslist[j] = g_Ename_group[j] + " \t" + equant + " \t" + g_Evalue[j] + " \t" + g_Epackagename[j] + " \t" + g_ElibrarySource[j] + " \t" + g_Eheadline[j] + " \t" + g_Elayer[j];
 
         if ( g_Elayer[j] == "Top" ) {
-            components_Top_ptr[TopCounter] = j; // keep track of component
+            components_Top_ptr[TopCounter] = j;         // Keep track of component
             string gxname;
 
             components_Top[TopCounter] = alltrim ( g_Ename[j] );
@@ -2295,7 +2297,7 @@ if ( project.board ) project.board ( B )
                 maxComboLen_Top = combolen_Top;
             }
 
-            CT_ReelNo[TopCounter] = 0; // used as selections, will contains reel # selected
+            CT_ReelNo[TopCounter] = 0;                  // used as selections, will contains reel # selected
             CT_EpartsX[TopCounter] = g_EpartsX[j];
             CT_EpartsY[TopCounter] = g_EpartsX[j];
             CT_Epackagename[TopCounter] = g_Epackagename[j];
@@ -2326,13 +2328,13 @@ if ( project.board ) project.board ( B )
                     maxComboLen_Bottom = combolen_Bottom;
                 }
 
-                CB_ReelNo[BottomCounter] = 0; // initially select reel 0
+                CB_ReelNo[BottomCounter] = 0;           // Initially select reel 0
                 CB_EpartsX[BottomCounter] = g_EpartsX[j];
                 CB_EpartsY[BottomCounter] = g_EpartsX[j];
                 CB_Epackagename[BottomCounter] = g_Epackagename[j];
                 CB_Evalue[BottomCounter] = g_Evalue[j];
                 CB_Elayer[BottomCounter] = g_Elayer[j];
-                CB_class[BottomCounter] = g_class[j];   //grouping
+                CB_class[BottomCounter] = g_class[j];   // Grouping
                 CB_backptr[BottomCounter] = g_backptr[j];
                 BottomCounter++;
             }
@@ -2355,13 +2357,13 @@ if ( project.board ) project.board ( B )
                     maxComboLen_Mid = combolen_Mid;
                 }
 
-                CM_ReelNo[MidCounter] = 0; // initially select reel 0
+                CM_ReelNo[MidCounter] = 0;          // Initially select reel 0
                 CM_EpartsX[MidCounter] = g_EpartsX[j];
                 CM_EpartsY[MidCounter] = g_EpartsX[j];
                 CM_Epackagename[MidCounter] = g_Epackagename[j];
                 CM_Evalue[MidCounter] = g_Evalue[j];
                 CM_Elayer[MidCounter] = g_Elayer[j];
-                CM_class[MidCounter] = g_class[j];   //grouping
+                CM_class[MidCounter] = g_class[j];   // Grouping
                 CM_backptr[MidCounter] = g_backptr[j];
                 MidCounter++;
 
@@ -2377,10 +2379,10 @@ if ( project.board ) project.board ( B )
     // load config parameters
     if ( filesize ( paramsFilename ) > 0 ) {
         string lines[];
-        int nLines = fileread ( lines, paramsFilename ); // returns # of lines read
+        int nLines = fileread ( lines, paramsFilename ); // Returns # of lines read
 
         for ( i = 0; i < nLines; i++ ) {
-            string a[];    // use for spliting the line
+            string a[];    // Use for spliting the line
 
             n = strsplit ( a, lines[i], ',' );
 
@@ -2399,7 +2401,7 @@ if ( project.board ) project.board ( B )
 
     }
 
-    // load values from stack file
+    // Load values from stack file
 
     if ( filesize ( StackFname ) > 0 ) {
         string lines[];
@@ -2407,11 +2409,11 @@ if ( project.board ) project.board ( B )
         int tb = 0;
         int tm = 0;
         int tr = 0;
-        int nLines = fileread ( lines, StackFname ); // returns # of lines read
+        int nLines = fileread ( lines, StackFname ); // Returns # of lines read
 
         for ( i = 0; i < nLines; i++ ) {
 
-            string a[];    // use for spliting the line
+            string a[];    // Use for spliting the line
 
             n = strsplit ( a, lines[i], '|' );
 
@@ -2634,10 +2636,10 @@ if ( project.board ) project.board ( B )
             tabloop = 0;  // tab
             int TopAddLine[], BottomAddLine[], MidAddLine[];
 
-            int TopXcounter[];  // handles counter per tab containts topcounter, bottomcounter
-            int BottomXcounter[];  // handles counter per tab containts topcounter, bottomcounter
-            int MidXcounter[];  // handles counter per tab containts topcounter, bottomcounter
-            int tabpages[];  // how many pages per topcounter
+            int TopXcounter[];      // Handles counter per tab containts topcounter, bottomcounter
+            int BottomXcounter[];   // Handles counter per tab containts topcounter, bottomcounter
+            int MidXcounter[];      // Handles counter per tab containts topcounter, bottomcounter
+            int tabpages[];         // How many pages per topcounter
 
             AddTab = 0;
             int temp;
@@ -2679,7 +2681,7 @@ if ( project.board ) project.board ( B )
 
             pcb_layers[AddTab] = "PCB Bottom Layer";
             temp = BottomCounter;
-            BottomAddLine[pagey] = 0;   // lines to add in this page
+            BottomAddLine[pagey] = 0;   // Lines to add in this page
 
             while ( temp > 0 )
             {
@@ -2777,7 +2779,7 @@ if ( project.board ) project.board ( B )
 
                     dlgSpacing ( 0 );
 
-                    // make a combo name of name + footprint to make reel selection easier
+                    // Make a combo name of name + footprint to make reel selection easier
                     for ( j = 0; j <= MAXREEL; j++ ) {
                         ReelNameAndFoot[j] = Num2Str ( j  ) + ") " + Reel[j] + "/" + ReelFootPrint[j];
                     }
@@ -2942,7 +2944,7 @@ if ( project.board ) project.board ( B )
 
                                 }
 
-                                //ReelNumber, can't find a way to make this update after Reel Assignment is changed. it only updates next load
+                                // ReelNumber, can't find a way to make this update after Reel Assignment is changed. it only updates next load
                                 // changing it to a dlgSpinBox makes Reel Assignment change, but now not the other way around!
                                 dlgCell ( cellx, celly++ ) {
                                     dlgVBoxLayout {
@@ -3010,7 +3012,7 @@ if ( project.board ) project.board ( B )
 
                                 }
 
-                                // dropping this for now as it won't reflect changes made in the reel configurations height
+                                // Dropping this for now as it won't reflect changes made in the reel configurations height
                                 if ( 0 ) {
                                     dlgCell ( cellx, celly++ ) {
                                         dlgVBoxLayout{
@@ -3128,7 +3130,7 @@ if ( project.board ) project.board ( B )
 
         fileerror();
 
-        // store config settings
+        // Store config settings
         string paramsFilename;
 
         paramsFilename = workdir + SourceFname + ".cfg";
@@ -3180,9 +3182,9 @@ if ( project.board ) project.board ( B )
                     offsetx = ReelOffSetX[j];
                     offsety = ReelOffSetY[j];
 
-                    // will skip reels with no offset.
-                    // lets keep them, if we're using phantom reels
-                    // ok changed my mind again, remove them if offsetx/y or name is 0/empty just " "
+                    // Will skip reels with no offset.
+                    // Lets keep them, if we're using phantom reels
+                    // Ok changed my mind again, remove them if offsetx/y or name is 0/empty just " "
 
                     if ( ( strlen ( Reel[j] ) == 1 & strstr ( Reel[j], " " ) == 0 ) ) {
                         continue;
@@ -3192,17 +3194,17 @@ if ( project.board ) project.board ( B )
                         continue;
                     }
 
-                    //comment = Reel[j];
-                    //printf ( "65535,1,%d,%.2f,%.2f,%s,\n", j, offsetx, offsety, comment );
+                    // comment = Reel[j];
+                    // printf ( "65535,1,%d,%.2f,%.2f,%s,\n", j, offsetx, offsety, comment );
 
                     id = 0;
 
-                    // special feeder(this crashed older versions of neoden software, have to look into it
+                    // Special feeder(this crashed older versions of neoden software, have to look into it
                     if ( j >= SPECIALREEL ) {
                         id = 1;
                     }
 
-                    //special feeders have a different format.
+                    // Special feeders have a different format.
 
                     //#Feeder, Feeder ID, Type, Nozzle,    X,      Y, Angle, Footprint, Value  , Pick height, Pick delay, Place Height, Place Delay, Vacuum Discard,  Threshold, Vision Alignment, Speed,
                     //stack,   98,          1,    1 ,  92.27, 226.88, 0.00,     0805,   special,-1.00,            0,           0.00,         0,            No,            -40,       1,                50,
@@ -3213,10 +3215,10 @@ if ( project.board ) project.board ( B )
 
                     // Nozzle can be a list so if its 1, its 1, if its 1 and 4, its 14, all would be 1234
 
-                    // calculate an overide move speed
+                    // Calculate an overide move speed
                     int move_speed = ReelMoveSpeed[j];
 
-                    // can't be zero.
+                    // Can't be zero.
                     if ( board_move_override == 0 ) {
                         board_move_override = 1;
                     }
@@ -3227,12 +3229,12 @@ if ( project.board ) project.board ( B )
 
                         temp = ( move_speed / 100.0 ) * board_move_override;
 
-                        //round it, the neoden will override anything that isn't in steps of 10
+                        // Round it, the neoden will override anything that isn't in steps of 10
                         move_speed = round_and_clamp ( temp, 10, 100 );
                     }
 
                     int nozzleid;
-                    // converts to a number, since eagle combo boxes don't work without a first entry which we have as -
+                    // Converts to a number, since eagle combo boxes don't work without a first entry which we have as -
                     nozzleid = strtol ( nozzleCombo[ReelHead[j]] );
 
                     if ( j < SPECIALREEL ) {
@@ -3310,14 +3312,14 @@ if ( project.board ) project.board ( B )
                 }
 
 
-                // find first component XY, add adjusted board offset if any, we scan the list of components since this needs to be known before listing the components out
+                // Find first component XY, add adjusted board offset if any, we scan the list of components since this needs to be known before listing the components out
                 real first_x = get_first_x() + board_offset_x;
                 real first_y = get_first_y() + board_offset_y;
 
-                // pcb, manual feed, mag fixtured, something,something, detect x, detect y,
+                // Pcb, manual feed, mag fixtured, something,something, detect x, detect y,
                 printf ( "pcb,Manual,Lock,100,100,350,150,Front,10,10,0,\n" );
 
-                //fiducial settings
+                // Fiducial settings
 
                 // how many were found
                 int number_of_fiducials = scan_for_fiducials();
@@ -3325,11 +3327,11 @@ if ( project.board ) project.board ( B )
 
                 printf ( "test,No,\n" );
 
-                // are there any fiducials?
+                // Are there any fiducials?
                 if ( number_of_fiducials ) {
 
-                    // list of fiducials @todo,scan list of components with FID in the name ?
-                    // mark, Mirror/Whole, Auto/Manual
+                    // List of fiducials @todo,scan list of components with FID in the name ?
+                    // Mark, Mirror/Whole, Auto/Manual
                     // Auto/Manual = PCB Mark Settings ( Manual checkbox)
                     // Mirror/Whole = Panelised or Single
                     printf ( "mark,Whole,Auto," );
@@ -3338,24 +3340,24 @@ if ( project.board ) project.board ( B )
                         printf ( "%.3f,%.3f,", g_fiducial_x[fid] + board_offset_x, g_fiducial_y[fid] + board_offset_y );
                     }
 
-                    //terminate line
+                    // Terminate line
                     printf ( "\n" );
 
 
-                    // one per fiducial
-                    // markext, index, min,max,light source 1 =inner  (outer ) , brightness 0 = auto  (25/60/75/100/150/200/250/300)
+                    // One per fiducial
+                    // Markext, index, min,max,light source 1 =inner  (outer ) , brightness 0 = auto  (25/60/75/100/150/200/250/300)
                     for ( fid = 0; fid < number_of_fiducials; fid++ ) {
                         printf ( "markext,%d,0.8,3,1,0,\n", fid );
                     }
                 }
 
-                //  rows, cols, left bottom(x.y),...... last one is board rotation
-                // mirror_create,1,1,259.14,338.93,0,0,0,0,-0.187445,
+                // Rows, cols, left bottom(x.y),...... last one is board rotation
+                // Mirror_create,1,1,259.14,338.93,0,0,0,0,-0.187445,
                 printf ( "mirror_create,1,1,%.3f,%.3f,0,0,0,0,%f,\n", first_x, first_y, g_board_rotation );
 
 
 
-                // panel list
+                // Panel list
 
                 // x,y, rotation
                 printf ( "mirror,%.3f,%.3f,0,No,\n", first_x, first_y );
