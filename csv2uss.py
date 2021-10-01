@@ -25,7 +25,6 @@ def split_file(filename, split_mark='#'):
     for idx, line in enumerate(lines[:int(len(lines)/2)]):
         # Note the lines to split the file.
         if line.startswith(split_mark):
-            print(idx)
             line_splits.append(idx)
 
     first_file = filename + "_first.csv"
@@ -61,7 +60,21 @@ def parse_uss( pnp_df ):
     # 9,        8,   162.27,      206.88,         3,       4,        No,      No,       -40,-40,-40,-40,
 
     # Make empty df
+
     # ReelHead/nozzle is now an index into the nozzleCombo
+    """
+    //list of nozzle combinations for the parts dropdown
+    string nozzleCombo[] = { "-",
+                            "1", "2", "3", "4",
+                            "12", "13", "14",
+                            "22", "23", "24",
+                            "34",
+                            "123", "124",
+                            "234",
+                            "1234"
+                        };
+    """
+
     names = [   
         'Type',                 #
         'Feeder ID',            # 
@@ -69,7 +82,7 @@ def parse_uss( pnp_df ):
         'ReelHead',             # head = nozzle index to combo box.
         'ReelOffSetX',          # X location of feeder.
         'ReelOffSetY',          # Y location of feeder.
-        'ReelPickAngle',        # Angle.
+        'ReelPickAngle',        # Angle, -180,-90,0,90,180
         'ReelFootPrint',        # Footprint.
         'Reel',                 # Name (?)
         'ReelHeight',           # Pick Height
@@ -78,17 +91,17 @@ def parse_uss( pnp_df ):
         'ReelPlaceDelay',       # Placement Delay
         'ReelVacuumDetection',  # Vacuum Detection (Yes/No)
         'ReelVacuumValue',      # Vacuum Value
-        'ReelVisionAlignment',  # Vision Alignment.
+        'ReelVisionAlignment',  # Vision Alignment. No Action, Indivudally, Jointly, Large component
         'ReelMoveSpeed',        # 
         'ReelRate',             # Feeding Rate.
-        'ReelFeedStrength',     # Feed Strength.
+        'ReelFeedStrength',     # Feed Strength, 10 to 100 in steps of 1 (tourque).
         'ReelPeelStrength',     # Peel Strength.
         'ReelSkip',             # Skip (Yes/No).
-        'ReelSizeCorrect',      # Size Correct ( CheckMark Yes/No)
-        'Nozzle1Thresholds',
-        'Nozzle2Thresholds', 
-        'Nozzle3Thresholds', 
-        'Nozzle4Thresholds'
+        'ReelSizeCorrect',      # Size Correct ( CheckMark Yes/No).
+        'Nozzle1Thresholds',    # -10 to -100 in steps of 5.
+        'Nozzle2Thresholds',    # -10 to -100 in steps of 5.
+        'Nozzle3Thresholds',    # -10 to -100 in steps of 5.
+        'Nozzle4Thresholds'     # -10 to -100 in steps of 5.
         ]
 
     names_special = [   
@@ -98,7 +111,7 @@ def parse_uss( pnp_df ):
         'ReelHead',             # head = nozzle index to combo box.
         'ReelOffSetX',          # X location of feeder.
         'ReelOffSetY',          # Y location of feeder.
-        'ReelPickAngle',        # Angle.
+        'ReelPickAngle',        # Angle, -180,-90,0,90,180
         'ReelFootPrint',        # Footprint.
         'Reel',                 # Name (?)
         'ReelHeight',           # Pick Height
@@ -106,8 +119,8 @@ def parse_uss( pnp_df ):
         'ReelPlaceHeight',      # Placement Height
         'ReelPlaceDelay',       # Placement Delay
         'ReelVacuumDetection',  # Vacuum Detection (Yes/No)
-        'ReelVacuumValue',      # Vacuum Value
-        'ReelVisionAlignment',  # Vision Alignment.
+        'ReelVacuumValue',      # Vacuum Value, -10 to -100
+        'ReelVisionAlignment',  # Vision Alignment. No Action, Indivudally, Jointly, Large component [int].
         'ReelMoveSpeed',        # 
         'trayColumns',          #
         'trayRows',             # 
@@ -117,36 +130,103 @@ def parse_uss( pnp_df ):
         'trayStartY'            #
         'ReelSkip',             # Skip (Yes/No).
         'ReelSizeCorrect',      # Size Correct ( CheckMark Yes/No)
-        'Nozzle1Thresholds',
-        'Nozzle2Thresholds', 
-        'Nozzle3Thresholds', 
-        'Nozzle4Thresholds'
+        'Nozzle1Thresholds',    # -10 to -100 in steps of 5.
+        'Nozzle2Thresholds',    # -10 to -100 in steps of 5.
+        'Nozzle3Thresholds',    # -10 to -100 in steps of 5.
+        'Nozzle4Thresholds'     # -10 to -100 in steps of 5.
         ]
 
-    uss_df = pd.DataFrame(names=names)
+    uss_df_normal  = pd.DataFrame()
+    uss_df_normal.columns = names
+    uss_df_special = pd.DataFrame()
+    uss_df_special.columns = names_special
     
     for idx, row in pnp_df.iterrows():
+        # Normal feeder.
         if row['Feeder'] == 'stack':
-            data_list = ['[REEL]', 0.0, ]
+            data_list = [   '[REEL]',
+                            0, 
+                            row['Nozzle'],
+                            row['X'],
+                            row['Y'],
+                            row['Angle'],
+                            row['Footprint'],
+                            row['Value'],
+                            row['Pick Height'],
+                            row['Pick Delay'],
+                            row['Place Height'],
+                            row['Place Delay'],
+                            row['Vacuum Detection'],
+                            row['Threshold'],       # TODO Unsure about this field.
+                            row['Vision Alignment'],
+                            row['Speed'],
+                            row['Feed Rate/Column'],
+                            row['Feed torque/rows'],
+                            row['Peel Strength/right top x'],
+                            row['skip/right top y'],
+                            row['size correct/startx'],
+                            row['Nozzle 1 Threshold/starty'],
+                            row['Nozzle 2 Threshold/skip'],
+                            row['Nozzle 3 Threshold/size correct'],
+                            row['Nozzle 4 Threshold/Nozzle 1 Threshold'],
+                        ]
+            data_list_df = pd.DataFrame( data_list )
+            uss_df_normal.append(data_list_df)
+
+        """
+        # Special feeder/tray.
+        elif row['Feeder'] == 'mark':
+            data_list = ['[REEL]', 0 ]
             row_df = pd.DataFrame( data_list )
-            uss_df.append(row_df)
-            
-    
-    return uss_df
+            uss_df_special.append(row_df)
+        """
+
+        print(uss_df_normal)
+    return uss_df_normal, uss_df_special
 
 def convert_file( filename ):
     first_filename = split_file(filename)
 
-    names = ['Feeder','Feeder ID','Type','Nozzle','X','Y','Angle','Footprint','Value','Pick height','Pick delay','Place Height','Place Delay','Vacuum detection','Threshold','Vision Alignment','Speed','1','2','3','4','5','6','7','8','9','10','11','12','13','14','15','16']
+    # The column names for the neoden pnp file. The different feeder types reel/tray have different columns.
+    names = [   'Feeder',
+                'Feeder ID',
+                'Type',
+                'Nozzle',
+                'X',
+                'Y',
+                'Angle',
+                'Footprint',
+                'Value',
+                'Pick Height',
+                'Pick Delay',
+                'Place Height',
+                'Place Delay',
+                'Vacuum Detection',
+                'Threshold',
+                'Vision Alignment',
+                'Speed',
+                'Feed Rate/Column',             # Normal/special.
+                'Feed torque/rows',             # Normal/special.
+                'Peel Strength/right top x',    # Normal/special.
+                'skip/right top y',             # Normal/special.
+                'size correct/startx',          # Normal/special.
+                'Nozzle 1 Threshold/starty',    # Normal/special.
+                'Nozzle 2 Threshold/skip',      # Normal/special.
+                'Nozzle 3 Threshold/size correct',          # Normal/special.
+                'Nozzle 4 Threshold/Nozzle 1 Threshold',    # Normal/special.
+                '/Nozzle 2 Threshold',          # Normal/special.
+                '/Nozzle 3 Threshold',          # Normal/special.
+                '/Nozzle 4 Threshold',
+                '13', #?
+                '14', #?
+                '15', #?
+                '16'] #?
 
     pnp_df = pd.read_csv( first_filename, sep=',', names=names, skiprows=1 )
-    uss_df = parse_uss(pnp_df)
+    uss_normal_df, uss_special_df = parse_uss(pnp_df)
 
-    uss_df.to_csv('first_filename.USS',sep='|', header=False, index=False)
+    #uss_normal_df.to_csv('first_filename.USS',sep='|', header=False, index=False)
     
-    
-
-            
 
 
 if 1 < len(sys.argv):

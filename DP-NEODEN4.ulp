@@ -628,21 +628,21 @@ void write_reel_line ( int j )
         // 4,          80,            50,             No,        No,             -40, -40, -40, -40,
 
         sprintf (   str, "[REEL]|%d|%d|%d|%.2f|%.2f|%.2f|%s|%s|%.2f|%d|%.2f|%d|%s|%d|%d|%d|%d|%d|%d|%s|%s|%d|%d|%d|%d\n",
-                    j,									//%d 1
-                    0,									//%d 2
-                    ReelHead[j],							//%d 3
-                    ReelOffSetX[j],						//%.2f 4
-                    ReelOffSetY[j],						//%.2f 5
-                    ReelPickAngle[j],						//%.2f 6
-                    ReelFootPrint[j],						//%s 7
-                    Reel[j],								//%s 8
-                    ReelHeight[j],						//%.2f
-                    ReelPickDelay[j],						//%d
-                    ReelPlaceHeight[j],					//%.2f
-                    ReelPlaceDelay[j],					//%d
-                    ReelVacuumDetection[j] ? "YES" : "NO",//%s
-                    ReelVacuumValue[j],					//%d
-                    ReelVisionAlignment[j],				//%d
+                    j,									    //%d 1
+                    0,									    //%d 2
+                    ReelHead[j],						    //%d 3
+                    ReelOffSetX[j],						    //%.2f 4
+                    ReelOffSetY[j],						    //%.2f 5
+                    ReelPickAngle[j],					    //%.2f 6
+                    ReelFootPrint[j],					    //%s 7
+                    Reel[j],							    //%s 8
+                    ReelHeight[j],						    //%.2f
+                    ReelPickDelay[j],					    //%d
+                    ReelPlaceHeight[j],					    //%.2f
+                    ReelPlaceDelay[j],					    //%d
+                    ReelVacuumDetection[j] ? "Yes" : "No",  //%s
+                    ReelVacuumValue[j],					    //%d
+                    ReelVisionAlignment[j],				    //%d
                     ReelMoveSpeed[j],						//%d
 
                     // changes here
@@ -651,20 +651,18 @@ void write_reel_line ( int j )
                     ReelPeelStrength[j],					//%d
 
                     //restarts
-                    ReelSkip[j] ? "YES" : "NO",			//%s
-                    ReelSizeCorrect[j] ? "YES" : "NO",	//%s
+                    ReelSkip[j] ? "Yes" : "No",			    //%s
+                    ReelSizeCorrect[j] ? "Yes" : "No",	    //%s
 
                     //thresholds
-                    Nozzle1Thresholds[j], //%d
-                    Nozzle2Thresholds[j], //%d
-                    Nozzle3Thresholds[j], //%d
-                    Nozzle4Thresholds[j] //%d
+                    Nozzle1Thresholds[j],                   //%d
+                    Nozzle2Thresholds[j],                   //%d
+                    Nozzle3Thresholds[j],                   //%d
+                    Nozzle4Thresholds[j]                    //%d
                 );
-
-    } 
+    }
     else 
     {
-
         ///////////////////////////////////////////////
         // Special feeders have a different format.
 
@@ -676,39 +674,39 @@ void write_reel_line ( int j )
         // 9,        8,   162.27,      206.88,         3,       4,        No,      No,       -40,-40,-40,-40,
 
         sprintf ( str, "[REEL]|%d|%d|%d|%.2f|%.2f|%.2f|%s|%s|%.2f|%d|%.2f|%d|%s|%d|%d|%d|%d|%d|%.3f|%.3f|%d|%d|%s|%s|%d|%d|%d|%d\n",
-                  j,									//%d 1
-                  0,									//%d 2
-                  ReelHead[j],							//%d 3
-                  ReelOffSetX[j],						//%.2f 4
-                  ReelOffSetY[j],						//%.2f 5
-                  ReelPickAngle[j],						//%.2f 6
-                  ReelFootPrint[j],						//%s 7
-                  Reel[j],								//%s 8
-                  ReelHeight[j],						//%.2f 9
-                  ReelPickDelay[j],						//%d 10
-                  ReelPlaceHeight[j],					//%.2f 11
-                  ReelPlaceDelay[j],					//%d 12
-                  ReelVacuumDetection[j] ? "YES" : "NO",//%s 13
-                  ReelVacuumValue[j],					//%d 14
-                  ReelVisionAlignment[j],				//%d 15
-                  ReelMoveSpeed[j],						//%d 16
+                  j,									//%d    1
+                  0,									//%d    2
+                  ReelHead[j],							//%d    3
+                  ReelOffSetX[j],						//%.2f  4
+                  ReelOffSetY[j],						//%.2f  5
+                  ReelPickAngle[j],						//%.2f  6
+                  ReelFootPrint[j],						//%s    7
+                  Reel[j],								//%s    8
+                  ReelHeight[j],						//%.2f  9
+                  ReelPickDelay[j],						//%d    10
+                  ReelPlaceHeight[j],					//%.2f  11
+                  ReelPlaceDelay[j],					//%d    12
+                  ReelVacuumDetection[j] ? "Yes" : "NO",//%s    13
+                  ReelVacuumValue[j],					//%d    14
+                  ReelVisionAlignment[j],				//%d    15
+                  ReelMoveSpeed[j],						//%d    16
 
                   // changes here
-                  trayColumns[j],						//%d 17
-                  trayRows[j],							//%d 18
-                  trayRightTopX[j],						//%f 19
-                  trayRightTopY[j],						//%f 20
-                  trayStartX[j], 						//%d 21
-                  trayStartY[j],						//%d 22
+                  trayColumns[j],						//%d    17
+                  trayRows[j],							//%d    18
+                  trayRightTopX[j],						//%f    19
+                  trayRightTopY[j],						//%f    20
+                  trayStartX[j], 						//%d    21
+                  trayStartY[j],						//%d    22
 
                   //restarts
-                  ReelSkip[j] ? "YES" : "NO",			//%s 23
-                  ReelSizeCorrect[j] ? "YES" : "NO",	//%s 24
+                  ReelSkip[j] ? "Yes" : "No",			//%s    23
+                  ReelSizeCorrect[j] ? "Yes" : "No",	//%s    24
                   //thresholds
-                  Nozzle1Thresholds[j],                 //%d 25
-                  Nozzle2Thresholds[j],                 //%d 26
-                  Nozzle3Thresholds[j],                 //%d 27
-                  Nozzle4Thresholds[j]                  //%d 28
+                  Nozzle1Thresholds[j],                 //%d    25
+                  Nozzle2Thresholds[j],                 //%d    26
+                  Nozzle3Thresholds[j],                 //%d    27
+                  Nozzle4Thresholds[j]                  //%d    28
                 );
     }
 
@@ -1548,7 +1546,7 @@ void ReelPage ( int reeloffset )
                                 dlgVBoxLayout{
                                     if ( cellx == 0 )
                                     {
-                                        dlgLabel ( "Feed Torque" ); //renamed in newer neoden software
+                                        dlgLabel ( "Feed Torque" ); // Renamed in newer neoden software
                                     }
 
                                     else
