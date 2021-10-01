@@ -27,7 +27,7 @@ def split_file(filename, split_mark='#'):
         if line.startswith(split_mark):
             line_splits.append(idx)
 
-    first_file = filename + "_first.csv"
+    first_file = name_no_extension + "_first.csv"
 
     with open(first_file, 'w') as file:
         for line in lines[:int( line_splits[1] )]:
@@ -76,8 +76,8 @@ def parse_uss( pnp_df ):
     """
 
     names = [   
-        'Type',                 #
-        'Feeder ID',            # 
+        '[REEL]',                 #
+        'ReelIdx',              # 
         'Type',                 #
         'ReelHead',             # head = nozzle index to combo box.
         'ReelOffSetX',          # X location of feeder.
@@ -105,8 +105,8 @@ def parse_uss( pnp_df ):
         ]
 
     names_special = [   
-        'Type',                 #
-        'Feeder ID',            # 
+        '[REEL]',               #
+        'ReelIdx',              # 
         'Type',                 #
         'ReelHead',             # head = nozzle index to combo box.
         'ReelOffSetX',          # X location of feeder.
@@ -137,42 +137,43 @@ def parse_uss( pnp_df ):
         ]
 
     uss_df_normal  = pd.DataFrame()
-    uss_df_normal.columns = names
     uss_df_special = pd.DataFrame()
-    uss_df_special.columns = names_special
+    #uss_df_special.columns = names_special
     
     for idx, row in pnp_df.iterrows():
         # Normal feeder.
         if row['Feeder'] == 'stack':
-            data_list = [   '[REEL]',
-                            0, 
-                            row['Nozzle'],
-                            row['X'],
-                            row['Y'],
-                            row['Angle'],
-                            row['Footprint'],
-                            row['Value'],
-                            row['Pick Height'],
-                            row['Pick Delay'],
-                            row['Place Height'],
-                            row['Place Delay'],
-                            row['Vacuum Detection'],
-                            row['Threshold'],       # TODO Unsure about this field.
-                            row['Vision Alignment'],
-                            row['Speed'],
-                            row['Feed Rate/Column'],
-                            row['Feed torque/rows'],
-                            row['Peel Strength/right top x'],
-                            row['skip/right top y'],
-                            row['size correct/startx'],
-                            row['Nozzle 1 Threshold/starty'],
-                            row['Nozzle 2 Threshold/skip'],
-                            row['Nozzle 3 Threshold/size correct'],
-                            row['Nozzle 4 Threshold/Nozzle 1 Threshold'],
-                        ]
-            data_list_df = pd.DataFrame( data_list )
-            uss_df_normal.append(data_list_df)
+            data_dict = {   '[REEL]':               ['[REEL]'],                
+                            'ReelIdx':              [row['Feeder ID']],            
+                            'Type':                 [0],                 
+                            'ReelHead':             [row['Nozzle']],       
+                            'ReelOffSetX':          [row['X']],
+                            'ReelOffSetY':          [row['Y']],        
+                            'ReelPickAngle':        [row['Angle']],    
+                            'ReelFootPrint':        [row['Footprint']],
+                            'Reel':                 [row['Value']],
+                            'ReelHeight':           [row['Pick Height']],
+                            'ReelPickDelay':        [row['Pick Delay']],
+                            'ReelPlaceHeight':      [row['Place Height']],
+                            'ReelPlaceDelay':       [row['Place Delay']],
+                            'ReelVacuumDetection':  [row['Vacuum Detection']],
+                            'ReelVacuumValue':      [row['Threshold']],       #? 
+                            'ReelVisionAlignment':  [row['Vision Alignment']],
+                            'ReelMoveSpeed':        [row['Speed']],
+                            'ReelRate':             [row['Feed Rate/Column']],
+                            'ReelFeedStrength':     [row['Feed torque/rows']],
+                            'ReelPeelStrength':     [row['Peel Strength/right top x']],
+                            'ReelSkip':             [row['skip/right top y']],
+                            'ReelSizeCorrect':      [row['size correct/startx']],
+                            'Nozzle1Thresholds':    [row['Nozzle 1 Threshold/starty']],
+                            'Nozzle2Thresholds':    [row['Nozzle 2 Threshold/skip']],
+                            'Nozzle3Thresholds':    [row['Nozzle 3 Threshold/size correct']],
+                            'Nozzle4Thresholds':    [row['Nozzle 4 Threshold/Nozzle 1 Threshold']]}
 
+            data_list_df = pd.DataFrame( data_dict )
+            uss_df_normal = uss_df_normal.append( data_list_df, ignore_index=True )
+
+        # Currently only processing reels.
         """
         # Special feeder/tray.
         elif row['Feeder'] == 'mark':
@@ -180,12 +181,11 @@ def parse_uss( pnp_df ):
             row_df = pd.DataFrame( data_list )
             uss_df_special.append(row_df)
         """
-
-        print(uss_df_normal)
     return uss_df_normal, uss_df_special
 
 def convert_file( filename ):
-    first_filename = split_file(filename)
+    reel_table_filename = split_file(filename)
+    
 
     # The column names for the neoden pnp file. The different feeder types reel/tray have different columns.
     names = [   'Feeder',
@@ -222,10 +222,13 @@ def convert_file( filename ):
                 '15', #?
                 '16'] #?
 
-    pnp_df = pd.read_csv( first_filename, sep=',', names=names, skiprows=1 )
+    pnp_df = pd.read_csv( reel_table_filename, sep=',', names=names, skiprows=1 )
     uss_normal_df, uss_special_df = parse_uss(pnp_df)
 
-    #uss_normal_df.to_csv('first_filename.USS',sep='|', header=False, index=False)
+
+    name_no_extension = os.path.splitext(filename)[0]
+    uss_normal_df.to_csv(name_no_extension+'.USS',sep='|', header=False, index=False)
+    print("Saved file " + name_no_extension+'.USS')
     
 
 

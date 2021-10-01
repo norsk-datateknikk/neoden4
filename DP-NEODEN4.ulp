@@ -55,7 +55,7 @@ int i, j, k, l, m, n = 0;       // General purpose iteration/index variable
 string Text = "<br><br><center><a href='http://dangerousprototypes.com/2013/02/21/workshop-video-56-tm220a-table-top-pick-and-place-overview/'>Dangerous Prototypes Original Post</A><BR>"
               "<br><center><a href='https://www.nullspacelabs.com'>NullSpaceLabs.com</A>"
               "<br><center><a href='https://www.github.com/charlie-x'>Github Link, charlie-x</A>"
-              "<br><center><a href='https://www.github.com/charlie-x'>Github Link, Norsk Datateknikk AS</A>"
+              "<br><center><a href='https://www.github.com/norsk-datateknikk/'>Github Link, Norsk Datateknikk AS</A>"
 
               ; // image showed a 404
 
