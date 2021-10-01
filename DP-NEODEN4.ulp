@@ -608,15 +608,15 @@ int scan_for_fiducials()
 //"stack,2,0,1,409.87,101.73,90.00,0805,0805/2.2nF,0.50,0,0.50,0,No,-40,1,100,4,50,80,No,No,-40,-40,-40,-40,",
 //[REEL]|1|0805/2.2nF|0805|1|409.87|101.73|90.00|0805|0.50|0|0.50|0|NO|-40|1|100|4|50|80|NO|NO
 
-// Writes out a neoden 4 style string for a REEL
+// Writes out a User Standard Stack (USS) formatted string for a REEL.
 void write_reel_line ( int j )
 {
     string str;
 
     // ReelHead/nozzle is now an index into the nozzleCombo
 
-    if ( j < SPECIALREEL ) {
-
+    if ( j < SPECIALREEL ) 
+    {
 
         ///////////////////////////////////////////////
         // normal feeder setup
@@ -627,51 +627,53 @@ void write_reel_line ( int j )
         // Feed Rate, Feed torque,  Peel Strength,   skip,  size correct        Thresholds for nozzles 1-4
         // 4,          80,            50,             No,        No,             -40, -40, -40, -40,
 
+        sprintf (   str, "[REEL]|%d|%d|%d|%.2f|%.2f|%.2f|%s|%s|%.2f|%d|%.2f|%d|%s|%d|%d|%d|%d|%d|%d|%s|%s|%d|%d|%d|%d\n",
+                    j,									//%d 1
+                    0,									//%d 2
+                    ReelHead[j],							//%d 3
+                    ReelOffSetX[j],						//%.2f 4
+                    ReelOffSetY[j],						//%.2f 5
+                    ReelPickAngle[j],						//%.2f 6
+                    ReelFootPrint[j],						//%s 7
+                    Reel[j],								//%s 8
+                    ReelHeight[j],						//%.2f
+                    ReelPickDelay[j],						//%d
+                    ReelPlaceHeight[j],					//%.2f
+                    ReelPlaceDelay[j],					//%d
+                    ReelVacuumDetection[j] ? "YES" : "NO",//%s
+                    ReelVacuumValue[j],					//%d
+                    ReelVisionAlignment[j],				//%d
+                    ReelMoveSpeed[j],						//%d
 
-        sprintf ( str, "[REEL]|%d|%d|%d|%.2f|%.2f|%.2f|%s|%s|%.2f|%d|%.2f|%d|%s|%d|%d|%d|%d|%d|%d|%s|%s|%d|%d|%d|%d\n",
-                  j,									//%d 1
-                  0,									//%d 2
-                  ReelHead[j],							//%d 3
-                  ReelOffSetX[j],						//%.2f 4
-                  ReelOffSetY[j],						//%.2f 5
-                  ReelPickAngle[j],						//%.2f 6
-                  ReelFootPrint[j],						//%s 7
-                  Reel[j],								//%s 8
-                  ReelHeight[j],						//%.2f
-                  ReelPickDelay[j],						//%d
-                  ReelPlaceHeight[j],					//%.2f
-                  ReelPlaceDelay[j],					//%d
-                  ReelVacuumDetection[j] ? "YES" : "NO",//%s
-                  ReelVacuumValue[j],					//%d
-                  ReelVisionAlignment[j],				//%d
-                  ReelMoveSpeed[j],						//%d
+                    // changes here
+                    ReelRate[j],							//%d
+                    ReelFeedStrength[j],					//%d
+                    ReelPeelStrength[j],					//%d
 
-                  // changes here
-                  ReelRate[j],							//%d
-                  ReelFeedStrength[j],					//%d
-                  ReelPeelStrength[j],					//%d
-                  ReelSkip[j] ? "YES" : "NO",			//%s
-                  ReelSizeCorrect[j] ? "YES" : "NO",	//%s
+                    //restarts
+                    ReelSkip[j] ? "YES" : "NO",			//%s
+                    ReelSizeCorrect[j] ? "YES" : "NO",	//%s
 
-//thresholds
-                  Nozzle1Thresholds[j], //%d
-                  Nozzle2Thresholds[j], //%d
-                  Nozzle3Thresholds[j], //%d
-                  Nozzle4Thresholds[j] //%d
+                    //thresholds
+                    Nozzle1Thresholds[j], //%d
+                    Nozzle2Thresholds[j], //%d
+                    Nozzle3Thresholds[j], //%d
+                    Nozzle4Thresholds[j] //%d
                 );
 
-    } else {
+    } 
+    else 
+    {
 
-///////////////////////////////////////////////
-// Special feeders have a different format.
+        ///////////////////////////////////////////////
+        // Special feeders have a different format.
 
-//#Feeder, Feeder ID, Type, Nozzle,    X,      Y, Angle, Footprint, Value  , Pick height, Pick delay, Place Height, Place Delay, Vacuum Discard,  Threshold, Vision Alignment, Speed,
-//stack,   98,          1,    1 ,  92.27, 226.88, 0.00,     0805,   special,-1.00,            0,           0.00,         0,            No,            -40,       1,                50,
+        //#Feeder, Feeder ID, Type, Nozzle,    X,      Y, Angle, Footprint, Value  , Pick height, Pick delay, Place Height, Place Delay, Vacuum Discard,  Threshold, Vision Alignment, Speed,
+        //stack,   98,          1,    1 ,  92.27, 226.88, 0.00,     0805,   special,-1.00,            0,           0.00,         0,            No,            -40,       1,                50,
 
-// Continued, differences are here
-// columns, rows, right top x , right top y, startx, starty,   skip, size correct,  thresholds for nozzles 1-4
-// 9,        8,   162.27,      206.88,         3,       4,        No,      No,       -40,-40,-40,-40,
-
+        // Continued, differences are here
+        // columns, rows, right top x , right top y, startx, starty,   skip, size correct,  thresholds for nozzles 1-4
+        // 9,        8,   162.27,      206.88,         3,       4,        No,      No,       -40,-40,-40,-40,
 
         sprintf ( str, "[REEL]|%d|%d|%d|%.2f|%.2f|%.2f|%s|%s|%.2f|%d|%.2f|%d|%s|%d|%d|%d|%d|%d|%.3f|%.3f|%d|%d|%s|%s|%d|%d|%d|%d\n",
                   j,									//%d 1
@@ -701,12 +703,12 @@ void write_reel_line ( int j )
 
                   //restarts
                   ReelSkip[j] ? "YES" : "NO",			//%s 23
-                  ReelSizeCorrect[j] ? "YES" : "NO",		//%s 24
+                  ReelSizeCorrect[j] ? "YES" : "NO",	//%s 24
                   //thresholds
-                  Nozzle1Thresholds[j], //%d 25
-                  Nozzle2Thresholds[j], //%d 26
-                  Nozzle3Thresholds[j], //%d 27
-                  Nozzle4Thresholds[j] //%d 28
+                  Nozzle1Thresholds[j],                 //%d 25
+                  Nozzle2Thresholds[j],                 //%d 26
+                  Nozzle3Thresholds[j],                 //%d 27
+                  Nozzle4Thresholds[j]                  //%d 28
                 );
     }
 
@@ -715,7 +717,7 @@ void write_reel_line ( int j )
 
 
 
-// Parses a neoden 4 style string for a REEL.
+// Parses a neoden 4 style string for a REEL from a USS line.
 // Reel index stored in file is +1 of actual index.
 void parse_reel_line ( string reelString )
 {
@@ -806,7 +808,6 @@ void parse_reel_line ( string reelString )
             // Feeding Rate.
             ReelRate[i] = strtol ( alltrim ( a[17] ) );
 
-
             // Feed Strength.
             ReelFeedStrength[i] = strtol ( alltrim ( a[18] ) );
 
@@ -834,7 +835,9 @@ void parse_reel_line ( string reelString )
             Nozzle3Thresholds[i] = strtol ( alltrim ( a[24] ) );
             Nozzle4Thresholds[i] = strtol ( alltrim ( a[25] ) );
 
-        } else {
+        }
+        else 
+        {
             // read special feeders.
 
             // (int)
